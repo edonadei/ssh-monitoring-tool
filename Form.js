@@ -1,20 +1,19 @@
-// Helper styles for demo
 import "./helper.css";
 import './App.css';
 import logo from './logo.svg';
+import { MoreResources, DisplayFormikState } from "./helper";
 import React from "react";
 import { render } from "react-dom";
 import { Formik, withFormik } from "formik";
 import * as Yup from "yup";
 import classnames from 'classnames';
 
-
 const formikEnhancer = withFormik({
   validationSchema: Yup.object().shape({
     name: Yup.string()
       .min(2, "The url is probably longer than that !")
       .required("Url is required"),
-    port: Yup.number()
+    port: Yup.string()
       .min(2, "The port number is probably longer than that !")
       .required("Port number is required."),
     username: Yup.string()
@@ -27,9 +26,10 @@ const formikEnhancer = withFormik({
     ...user
   }),
   handleSubmit: (payload, { setSubmitting }) => {
-    
-    let conn = payload;
-    render(<SSHTerminal />, document.getElementById("root"));
+    alert(payload.port);
+    alert(payload.name);
+    alert(payload.username);
+    alert(payload.key);
 
     setSubmitting(true);
   },
@@ -99,8 +99,10 @@ const formSSHMonitoringtool = props => {
       />
       <TextInput
         id="port"
-        type="number"
+        type="text"
         label="Port"
+        min="1"
+        max="99999"
         placeholder="Port name: exemple 23"
         error={touched.port && errors.port}
         value={values.port}
@@ -119,7 +121,7 @@ const formSSHMonitoringtool = props => {
         onChange={handleChange}
         onBlur={handleBlur}
       />
-      <label htmlFor="key" style={{ display: "block" }}>
+      <label htmlFor="port" style={{ display: "block" }}>
               SSH Key
       </label>
       <input
@@ -155,18 +157,11 @@ const formSSHMonitoringtool = props => {
 
 const MyEnhancedForm = formikEnhancer(formSSHMonitoringtool);
 
-const App = () => (
+const Form = () => (
   <div className="App-header">
     <img src={logo} className="App-logo" alt="logo" />
     <MyEnhancedForm user={{ name: '', port: '', username: '', key: '' }} />
   </div>
 );
 
-const SSHTerminal = () => (
-    <div className="App-header">
-    Bienvenue sur le TERMINAL :o
-    </div>
-);
-
-render(<App />, document.getElementById("root"));
-
+export default Form;
